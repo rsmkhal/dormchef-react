@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/dormchef-react/static/css/main.935bd273.css",
-    "main.js": "/dormchef-react/static/js/main.ca948551.js",
+    "main.js": "/dormchef-react/static/js/main.1e4d4eb9.js",
     "static/js/453.fe0cf8fd.chunk.js": "/dormchef-react/static/js/453.fe0cf8fd.chunk.js",
     "index.html": "/dormchef-react/index.html",
     "main.935bd273.css.map": "/dormchef-react/static/css/main.935bd273.css.map",
-    "main.ca948551.js.map": "/dormchef-react/static/js/main.ca948551.js.map",
+    "main.1e4d4eb9.js.map": "/dormchef-react/static/js/main.1e4d4eb9.js.map",
     "453.fe0cf8fd.chunk.js.map": "/dormchef-react/static/js/453.fe0cf8fd.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.935bd273.css",
-    "static/js/main.ca948551.js"
+    "static/js/main.1e4d4eb9.js"
   ]
 }
