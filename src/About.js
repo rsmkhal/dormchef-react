@@ -4,8 +4,11 @@ import ImagePopup from "./ImagePopup";
 function About() {
   const [popup, setPopup] = useState(null);
 
-  const handleImageKey = (e, src, alt) => {
-    if (e.key === "Enter" || e.key === " ") setPopup({ src, alt });
+  const imgSrc = process.env.PUBLIC_URL + "/images/chef-founder.jpg";
+  const imgAlt = "Photo of founder";
+
+  const handleImageKey = (e) => {
+    if (e.key === "Enter" || e.key === " ") setPopup({ src: imgSrc, alt: imgAlt });
   };
 
   return (
@@ -34,12 +37,12 @@ function About() {
           </p>
         </div>
         <img
-          src="/images/chef-founder.jpg"
-          alt="Photo of founder"
+          src={imgSrc}
+          alt={imgAlt}
           className="about-photo enlargeable"
           tabIndex={0}
-          onClick={() => setPopup({ src: "/images/chef-founder.jpg", alt: "Photo of founder" })}
-          onKeyDown={e => handleImageKey(e, "/images/chef-founder.jpg", "Photo of founder")}
+          onClick={() => setPopup({ src: imgSrc, alt: imgAlt })}
+          onKeyDown={handleImageKey}
         />
       </div>
       {popup && (

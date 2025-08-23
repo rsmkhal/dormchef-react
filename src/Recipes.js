@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import ImagePopup from "./ImagePopup";
 
 function Recipes() {
   const [popup, setPopup] = useState(null);
+  const allRecipesRef = useRef(null);
 
+  // Helper for keyboard accessibility
   const handleImageKey = (e, src, alt) => {
     if (e.key === "Enter" || e.key === " ") setPopup({ src, alt });
+  };
+
+  // Helper to get the correct image path
+  const getImgSrc = (filename) => process.env.PUBLIC_URL + "/images/" + filename;
+
+  const scrollToAllRecipes = () => {
+    allRecipesRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -17,12 +26,12 @@ function Recipes() {
         </h2>
         <div className="highlight-content">
           <img
-            src="/images/chickenparm.jpg"
+            src={getImgSrc("chickenparm.jpg")}
             alt="Chicken Parmesan"
             className="about-photo enlargeable"
             tabIndex={0}
-            onClick={() => setPopup({ src: "/images/chickenparm.jpg", alt: "Chicken Parmesan" })}
-            onKeyDown={e => handleImageKey(e, "/images/chickenparm.jpg", "Chicken Parmesan")}
+            onClick={() => setPopup({ src: getImgSrc("chickenparm.jpg"), alt: "Chicken Parmesan" })}
+            onKeyDown={e => handleImageKey(e, getImgSrc("chickenparm.jpg"), "Chicken Parmesan")}
           />
           <div>
             <p>
@@ -49,11 +58,23 @@ function Recipes() {
             </div>
           </div>
         </div>
-        <a href="#all-recipes" className="see-all-link">
+        <button
+          className="see-all-link"
+          onClick={scrollToAllRecipes}
+          style={{
+            background: "none",
+            border: "none",
+            color: "inherit",
+            cursor: "pointer",
+            padding: 0,
+            font: "inherit",
+            textAlign: "left"
+          }}
+        >
           See all recipes ↓
-        </a>
+        </button>
       </section>
-      <section id="all-recipes" className="recipes-list">
+      <section ref={allRecipesRef} id="all-recipes" className="recipes-list">
         <h2>Full menu</h2>
         <div className="filters">
           <button>Quick</button>
@@ -63,34 +84,34 @@ function Recipes() {
         <div className="recipe-cards">
           <div className="recipe-card">
             <img
-              src="/images/burger.jpg"
+              src={getImgSrc("burger.jpg")}
               alt="Beef Burger"
               className="about-photo enlargeable"
               tabIndex={0}
-              onClick={() => setPopup({ src: "/images/burger.jpg", alt: "Beef Burger" })}
-              onKeyDown={e => handleImageKey(e, "/images/burger.jpg", "Beef Burger")}
+              onClick={() => setPopup({ src: getImgSrc("burger.jpg"), alt: "Beef Burger" })}
+              onKeyDown={e => handleImageKey(e, getImgSrc("burger.jpg"), "Beef Burger")}
             />
             <p>Homemade Beef Burger</p>
           </div>
           <div className="recipe-card">
             <img
-              src="/images/pancakes.jpg"
+              src={getImgSrc("pancakes.jpg")}
               alt="Pancakes with strawberry and caramel"
               className="about-photo enlargeable"
               tabIndex={0}
-              onClick={() => setPopup({ src: "/images/pancakes.jpg", alt: "Pancakes with strawberry and caramel" })}
-              onKeyDown={e => handleImageKey(e, "/images/pancakes.jpg", "Pancakes with strawberry and caramel")}
+              onClick={() => setPopup({ src: getImgSrc("pancakes.jpg"), alt: "Pancakes with strawberry and caramel" })}
+              onKeyDown={e => handleImageKey(e, getImgSrc("pancakes.jpg"), "Pancakes with strawberry and caramel")}
             />
             <p>Strawberry Caramel Pancakes</p>
           </div>
           <div className="recipe-card">
             <img
-              src="/images/steak.jpg"
+              src={getImgSrc("steak.jpg")}
               alt="Steak and vegetables"
               className="about-photo enlargeable"
               tabIndex={0}
-              onClick={() => setPopup({ src: "/images/steak.jpg", alt: "Steak and vegetables" })}
-              onKeyDown={e => handleImageKey(e, "/images/steak.jpg", "Steak and vegetables")}
+              onClick={() => setPopup({ src: getImgSrc("steak.jpg"), alt: "Steak and vegetables" })}
+              onKeyDown={e => handleImageKey(e, getImgSrc("steak.jpg"), "Steak and vegetables")}
             />
             <p>T-Bone Steak and Pepper Sauce</p>
           </div>
