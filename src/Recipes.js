@@ -5,30 +5,43 @@ import RecipePopup from "./RecipePopup";
 function Recipes() {
   const [popup, setPopup] = useState(null);
   const [detail, setDetail] = useState(null);
+  const [filter, setFilter] = useState(null);
 
   const allRecipesRef = useRef(null);
 
+  // Helper to get the correct image path
   const getImgSrc = (filename) => process.env.PUBLIC_URL + "/images/" + filename;
 
   const scrollToAllRecipes = () => {
     allRecipesRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Card keyboard handler: only fire when the CARD itself is focused
+  // card keyboard handler: only fire when the CARD itself is focused
   const handleCardKey = (e, openDetailData) => {
     if (e.target !== e.currentTarget) return; // ignore events from child controls
     if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
+      e.preventDefault(); 
       setDetail(openDetailData);
     }
   };
 
+  // for the featured image
   const handleImageKey = (e, src, alt) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       setPopup({ src, alt });
     }
   };
+
+  // ---- FILTERS ----
+  const filters = ["Quick", "Vegetarian", "High Protein"];
+  const TAGS = {
+    burger: ["Quick", "High Protein"],
+    pancakes: ["Quick", "Vegetarian"],
+    steak: ["High Protein"],
+  };
+  const toggleFilter = (name) => setFilter((prev) => (prev === name ? null : name));
+  const isVisible = (tags) => !filter || tags.includes(filter);
 
   return (
     <main>
@@ -100,241 +113,279 @@ function Recipes() {
 
       {/* All recipes */}
       <section ref={allRecipesRef} id="all-recipes" className="recipes-list">
-        <h2>Full menu</h2>
+        <h2>
+          Full menu{filter ? ` — ${filter}` : ""}
+        </h2>
 
-        <div className="filters">
-          <button>Quick</button>
-          <button>Vegetarian</button>
-          <button>High Protein</button>
+        {/* FILTER BUTTONS */}
+        <div className="filters" role="toolbar" aria-label="Recipe filters">
+          {filters.map((name) => {
+            const active = filter === name;
+            return (
+              <button
+                key={name}
+                type="button"
+                className={`filter-btn${active ? " is-active" : ""}`}
+                aria-pressed={active}
+                onClick={() => toggleFilter(name)}
+              >
+                {name}
+              </button>
+            );
+          })}
+          {/* Optional clear button ??? revisit based on feedback
+          <button
+            type="button"
+            className="filter-btn"
+            onClick={() => setFilter(null)}
+            disabled={!filter}
+          >
+            Clear
+          </button> */}
         </div>
 
         <div className="recipe-cards">
           {/* ===== CARD: Burger ===== */}
-          <div
-            className="recipe-card"
-            role="button"
-            aria-haspopup="dialog"
-            aria-label="Open recipe details: Homemade Beef Burger"
-            tabIndex={0}
-            onClick={() =>
-              setDetail({
-                title: "Homemade Beef Burger",
-                ingredients: [
-                  "Ground beef",
-                  "Salt & pepper",
-                  "Bun",
-                  "Cheese",
-                  "Lettuce",
-                  "Tomato",
-                ],
-                instructions: [
-                  "Season beef and form a patty.",
-                  "Pan-sear 3–4 min per side; add cheese to melt.",
-                  "Toast bun; assemble with toppings.",
-                ],
-              })
-            }
-            onKeyDown={(e) =>
-              handleCardKey(e, {
-                title: "Homemade Beef Burger",
-                ingredients: [
-                  "Ground beef",
-                  "Salt & pepper",
-                  "Bun",
-                  "Cheese",
-                  "Lettuce",
-                  "Tomato",
-                ],
-                instructions: [
-                  "Season beef and form a patty.",
-                  "Pan-sear 3–4 min per side; add cheese to melt.",
-                  "Toast bun; assemble with toppings.",
-                ],
-              })
-            }
-          >
-            {/* Image as a real button so it's tabbable and opens the image popup */}
-            <button
-              type="button"
-              className="img-zoom-btn"
+          {isVisible(TAGS.burger) && (
+            <div
+              className="recipe-card"
+              role="button"
               aria-haspopup="dialog"
-              aria-label="Enlarge image: Beef Burger"
-              onClick={(e) => {
-                e.stopPropagation(); // don't open card detail
-                setPopup({
-                  src: getImgSrc("burger.jpg"),
-                  alt: "Beef Burger",
-                });
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
+              aria-label="Open recipe details: Homemade Beef Burger"
+              tabIndex={0}
+              onClick={() =>
+                setDetail({
+                  title: "Homemade Beef Burger",
+                  ingredients: [
+                    "Ground beef",
+                    "Salt & pepper",
+                    "Bun",
+                    "Cheese",
+                    "Lettuce",
+                    "Tomato",
+                  ],
+                  instructions: [
+                    "Season beef and form a patty.",
+                    "Pan-sear 3–4 min per side; add cheese to melt.",
+                    "Toast bun; assemble with toppings.",
+                  ],
+                })
+              }
+              onKeyDown={(e) =>
+                handleCardKey(e, {
+                  title: "Homemade Beef Burger",
+                  ingredients: [
+                    "Ground beef",
+                    "Salt & pepper",
+                    "Bun",
+                    "Cheese",
+                    "Lettuce",
+                    "Tomato",
+                  ],
+                  instructions: [
+                    "Season beef and form a patty.",
+                    "Pan-sear 3–4 min per side; add cheese to melt.",
+                    "Toast bun; assemble with toppings.",
+                  ],
+                })
+              }
+            >
+              {/* Image button for zoom popup */}
+              <button
+                type="button"
+                className="img-zoom-btn"
+                aria-haspopup="dialog"
+                aria-label="Enlarge image: Beef Burger"
+                onClick={(e) => {
                   e.stopPropagation();
                   setPopup({
                     src: getImgSrc("burger.jpg"),
                     alt: "Beef Burger",
                   });
-                }
-              }}
-            >
-              <img
-                src={getImgSrc("burger.jpg")}
-                alt="Beef Burger"
-                className="about-photo enlargeable"
-              />
-            </button>
-            <p>Homemade Beef Burger</p>
-          </div>
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setPopup({
+                      src: getImgSrc("burger.jpg"),
+                      alt: "Beef Burger",
+                    });
+                  }
+                }}
+              >
+                <img
+                  src={getImgSrc("burger.jpg")}
+                  alt="Beef Burger"
+                  className="about-photo enlargeable"
+                />
+              </button>
+              <p>Homemade Beef Burger</p>
+            </div>
+          )}
 
           {/* ===== CARD: Pancakes ===== */}
-          <div
-            className="recipe-card"
-            role="button"
-            aria-haspopup="dialog"
-            aria-label="Open recipe details: Strawberry Caramel Pancakes"
-            tabIndex={0}
-            onClick={() =>
-              setDetail({
-                title: "Strawberry Caramel Pancakes",
-                ingredients: [
-                  "Pancake mix",
-                  "Milk/Water",
-                  "Butter",
-                  "Strawberries",
-                  "Caramel sauce",
-                ],
-                instructions: [
-                  "Mix batter per package.",
-                  "Cook on medium heat until bubbles form; flip.",
-                  "Top with sliced strawberries and caramel.",
-                ],
-              })
-            }
-            onKeyDown={(e) =>
-              handleCardKey(e, {
-                title: "Strawberry Caramel Pancakes",
-                ingredients: [
-                  "Pancake mix",
-                  "Milk/Water",
-                  "Butter",
-                  "Strawberries",
-                  "Caramel sauce",
-                ],
-                instructions: [
-                  "Mix batter per package.",
-                  "Cook on medium heat until bubbles form; flip.",
-                  "Top with sliced strawberries and caramel.",
-                ],
-              })
-            }
-          >
-            <button
-              type="button"
-              className="img-zoom-btn"
+          {isVisible(TAGS.pancakes) && (
+            <div
+              className="recipe-card"
+              role="button"
               aria-haspopup="dialog"
-              aria-label="Enlarge image: Pancakes with strawberry and caramel"
-              onClick={(e) => {
-                e.stopPropagation();
-                setPopup({
-                  src: getImgSrc("pancakes.jpg"),
-                  alt: "Pancakes with strawberry and caramel",
-                });
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
+              aria-label="Open recipe details: Strawberry Caramel Pancakes"
+              tabIndex={0}
+              onClick={() =>
+                setDetail({
+                  title: "Strawberry Caramel Pancakes",
+                  ingredients: [
+                    "Pancake mix",
+                    "Milk/Water",
+                    "Butter",
+                    "Strawberries",
+                    "Caramel sauce",
+                  ],
+                  instructions: [
+                    "Mix batter per package.",
+                    "Cook on medium heat until bubbles form; flip.",
+                    "Top with sliced strawberries and caramel.",
+                  ],
+                })
+              }
+              onKeyDown={(e) =>
+                handleCardKey(e, {
+                  title: "Strawberry Caramel Pancakes",
+                  ingredients: [
+                    "Pancake mix",
+                    "Milk/Water",
+                    "Butter",
+                    "Strawberries",
+                    "Caramel sauce",
+                  ],
+                  instructions: [
+                    "Mix batter per package.",
+                    "Cook on medium heat until bubbles form; flip.",
+                    "Top with sliced strawberries and caramel.",
+                  ],
+                })
+              }
+            >
+              <button
+                type="button"
+                className="img-zoom-btn"
+                aria-haspopup="dialog"
+                aria-label="Enlarge image: Pancakes with strawberry and caramel"
+                onClick={(e) => {
                   e.stopPropagation();
                   setPopup({
                     src: getImgSrc("pancakes.jpg"),
                     alt: "Pancakes with strawberry and caramel",
                   });
-                }
-              }}
-            >
-              <img
-                src={getImgSrc("pancakes.jpg")}
-                alt="Pancakes with strawberry and caramel"
-                className="about-photo enlargeable"
-              />
-            </button>
-            <p>Strawberry Caramel Pancakes</p>
-          </div>
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setPopup({
+                      src: getImgSrc("pancakes.jpg"),
+                      alt: "Pancakes with strawberry and caramel",
+                    });
+                  }
+                }}
+              >
+                <img
+                  src={getImgSrc("pancakes.jpg")}
+                  alt="Pancakes with strawberry and caramel"
+                  className="about-photo enlargeable"
+                />
+              </button>
+              <p>Strawberry Caramel Pancakes</p>
+            </div>
+          )}
 
           {/* ===== CARD: Steak ===== */}
-          <div
-            className="recipe-card"
-            role="button"
-            aria-haspopup="dialog"
-            aria-label="Open recipe details: T-Bone Steak and Pepper Sauce"
-            tabIndex={0}
-            onClick={() =>
-              setDetail({
-                title: "T-Bone Steak and Pepper Sauce",
-                ingredients: [
-                  "T-bone steak",
-                  "Salt & pepper",
-                  "Butter",
-                  "Garlic",
-                  "Black pepper",
-                  "Cream (optional)",
-                ],
-                instructions: [
-                  "Salt steak; bring to room temp.",
-                  "Sear in butter 2–4 min/side; rest.",
-                  "Deglaze with pepper + splash of cream for sauce.",
-                ],
-              })
-            }
-            onKeyDown={(e) =>
-              handleCardKey(e, {
-                title: "T-Bone Steak and Pepper Sauce",
-                ingredients: [
-                  "T-bone steak",
-                  "Salt & pepper",
-                  "Butter",
-                  "Garlic",
-                  "Black pepper",
-                  "Cream (optional)",
-                ],
-                instructions: [
-                  "Salt steak; bring to room temp.",
-                  "Sear in butter 2–4 min/side; rest.",
-                  "Deglaze with pepper + splash of cream for sauce.",
-                ],
-              })
-            }
-          >
-            <button
-              type="button"
-              className="img-zoom-btn"
+          {isVisible(TAGS.steak) && (
+            <div
+              className="recipe-card"
+              role="button"
               aria-haspopup="dialog"
-              aria-label="Enlarge image: Steak and vegetables"
-              onClick={(e) => {
-                e.stopPropagation();
-                setPopup({
-                  src: getImgSrc("steak.jpg"),
-                  alt: "Steak and vegetables",
-                });
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
+              aria-label="Open recipe details: T-Bone Steak and Pepper Sauce"
+              tabIndex={0}
+              onClick={() =>
+                setDetail({
+                  title: "T-Bone Steak and Pepper Sauce",
+                  ingredients: [
+                    "T-bone steak",
+                    "Salt & pepper",
+                    "Butter",
+                    "Garlic",
+                    "Black pepper",
+                    "Cream (optional)",
+                  ],
+                  instructions: [
+                    "Salt steak; bring to room temp.",
+                    "Sear in butter 2–4 min/side; rest.",
+                    "Deglaze with pepper + splash of cream for sauce.",
+                  ],
+                })
+              }
+              onKeyDown={(e) =>
+                handleCardKey(e, {
+                  title: "T-Bone Steak and Pepper Sauce",
+                  ingredients: [
+                    "T-bone steak",
+                    "Salt & pepper",
+                    "Butter",
+                    "Garlic",
+                    "Black pepper",
+                    "Cream (optional)",
+                  ],
+                  instructions: [
+                    "Salt steak; bring to room temp.",
+                    "Sear in butter 2–4 min/side; rest.",
+                    "Deglaze with pepper + splash of cream for sauce.",
+                  ],
+                })
+              }
+            >
+              <button
+                type="button"
+                className="img-zoom-btn"
+                aria-haspopup="dialog"
+                aria-label="Enlarge image: Steak and vegetables"
+                onClick={(e) => {
                   e.stopPropagation();
                   setPopup({
                     src: getImgSrc("steak.jpg"),
                     alt: "Steak and vegetables",
                   });
-                }
-              }}
-            >
-              <img
-                src={getImgSrc("steak.jpg")}
-                alt="Steak and vegetables"
-                className="about-photo enlargeable"
-              />
-            </button>
-            <p>T-Bone Steak and Pepper Sauce</p>
-          </div>
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setPopup({
+                      src: getImgSrc("steak.jpg"),
+                      alt: "Steak and vegetables",
+                    });
+                  }
+                }}
+              >
+                <img
+                  src={getImgSrc("steak.jpg")}
+                  alt="Steak and vegetables"
+                  className="about-photo enlargeable"
+                />
+              </button>
+              <p>T-Bone Steak and Pepper Sauce</p>
+            </div>
+          )}
+
+          {/* Empty state */}
+          {!isVisible(TAGS.burger) &&
+            !isVisible(TAGS.pancakes) &&
+            !isVisible(TAGS.steak) && (
+              <p role="status" style={{ opacity: 0.8 }}>
+                No recipes match “{filter}”.
+              </p>
+            )}
         </div>
       </section>
 
