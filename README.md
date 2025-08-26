@@ -1,4 +1,4 @@
-# DormChef Interactive Features
+# DormChef Final Submission
 Name: Reem Khalid
 
 Link to Video: https://drive.google.com/drive/folders/1GhVk-QccphA9rcundehSXv5vfuhvch_O?usp=drive_link
