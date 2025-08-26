@@ -10,19 +10,19 @@ Concept: DormChef is a small React app that helps college students find quick, b
 
 Requirements: Node 18+ and npm
 
-``
+```bash
 npm install
 npm start
-``
+```
 then open http://localhost:3000
 
 
 # Build & Deploy to GitHub Pages (if making changes)
 
-``
+```bash
 npm run build
 npm run deploy
-``
+```
 
 # Features of this site
 
