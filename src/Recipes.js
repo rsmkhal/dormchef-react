@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ImagePopup from "./ImagePopup";
 import RecipePopup from "./RecipePopup";
 
@@ -8,6 +8,8 @@ function Recipes() {
   const [filter, setFilter] = useState(null);
 
   const allRecipesRef = useRef(null);
+
+  useEffect(() => { document.title = "Recipes — DormChef"; }, []);
 
   // get the correct image path
   const getImgSrc = (filename) => process.env.PUBLIC_URL + "/images/" + filename;
@@ -20,7 +22,7 @@ function Recipes() {
   const handleCardKey = (e, openDetailData) => {
     if (e.target !== e.currentTarget) return; // ignore events from child controls
     if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault(); 
+      e.preventDefault();
       setDetail(openDetailData);
     }
   };
@@ -44,7 +46,7 @@ function Recipes() {
   const isVisible = (tags) => !filter || tags.includes(filter);
 
   return (
-    <main>
+    <main id="main">
       <h1>Recipes</h1>
 
       {/* featured recipe section */}
@@ -55,7 +57,10 @@ function Recipes() {
         <div className="highlight-content">
           <img
             src={getImgSrc("chickenparm.jpg")}
-            alt="Chicken Parmesan"
+            alt=""                                   // decorative; control is named by aria-label
+            role="button"
+            aria-label="Enlarge image: Chicken Parmesan"
+            aria-haspopup="dialog"
             className="about-photo enlargeable"
             tabIndex={0}
             onClick={() =>
@@ -133,15 +138,6 @@ function Recipes() {
               </button>
             );
           })}
-          {/* Optional clear button ??? revisit based on feedback
-          <button
-            type="button"
-            className="filter-btn"
-            onClick={() => setFilter(null)}
-            disabled={!filter}
-          >
-            Clear
-          </button> */}
         </div>
 
         <div className="recipe-cards">
@@ -216,7 +212,8 @@ function Recipes() {
               >
                 <img
                   src={getImgSrc("burger.jpg")}
-                  alt="Beef Burger"
+                  alt="" // decorative inside labeled control
+                  aria-hidden="true"
                   className="about-photo enlargeable"
                 />
               </button>
@@ -292,7 +289,8 @@ function Recipes() {
               >
                 <img
                   src={getImgSrc("pancakes.jpg")}
-                  alt="Pancakes with strawberry and caramel"
+                  alt="" // decorative inside labeled control
+                  aria-hidden="true"
                   className="about-photo enlargeable"
                 />
               </button>
@@ -370,7 +368,8 @@ function Recipes() {
               >
                 <img
                   src={getImgSrc("steak.jpg")}
-                  alt="Steak and vegetables"
+                  alt="" // decorative inside labeled control
+                  aria-hidden="true"
                   className="about-photo enlargeable"
                 />
               </button>

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function Contact() {
+  useEffect(() => { document.title = "Contact — DormChef"; }, []);
+
   const [sending, setSending] = useState(false);
 
   function handleSubmit(e) {
@@ -43,20 +45,47 @@ function Contact() {
   }
 
   return (
-    <main className="contact">
+    <main id="main" className="contact">
       <h1>Reach Out</h1>
+
       <div className="contact-content">
-        <form onSubmit={handleSubmit} noValidate>
+        {/*works with and without JS */}
+        <form
+          onSubmit={handleSubmit}
+          noValidate
+          action="mailto:info@dormchef.com?subject=Website%20Contact%20%E2%80%94%20DormChef"
+          method="post"
+          encType="text/plain"
+        >
           <label htmlFor="email">Email:</label>
-          <input id="email" name="email" type="email" placeholder="your@email.com" required />
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="your@email.com"
+            required
+            autoComplete="email"
+          />
 
           <label htmlFor="phone">Phone:</label>
-          <input id="phone" name="phone" type="tel" placeholder="000-000-0000" />
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            placeholder="000-000-0000"
+            inputMode="tel"
+            autoComplete="tel"
+          />
 
           <label htmlFor="message">Message:</label>
-          <textarea id="message" name="message" placeholder="How can we help?" required></textarea>
+          <textarea
+            id="message"
+            name="message"
+            placeholder="How can we help?"
+            required
+          ></textarea>
 
-          <button type="submit" disabled={sending}>
+          <button type="submit" disabled={sending} aria-busy={sending}>
             {sending ? "Opening your email app…" : "Send"}
           </button>
         </form>
@@ -70,7 +99,8 @@ function Contact() {
             <strong>Location:</strong> <span>123 College Ave, Dormtown</span>
           </p>
           <p>
-            We love to hear from students and partners! Reach out with questions, suggestions, or partnership ideas.
+            We love to hear from students and partners! Reach out with
+            questions, suggestions, or partnership ideas.
           </p>
         </div>
       </div>

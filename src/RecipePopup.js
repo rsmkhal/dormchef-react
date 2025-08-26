@@ -20,7 +20,7 @@ function RecipePopup({ title, ingredients = [], instructions = [], onClose }) {
         zIndex: 9999
       }}
     >
-      {/* stop click from bubbling so only the overlay closes */}
+      {/* stop bubbling so only the overlay closes */}
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
