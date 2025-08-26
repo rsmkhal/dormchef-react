@@ -9,7 +9,7 @@ function Recipes() {
 
   const allRecipesRef = useRef(null);
 
-  // Helper to get the correct image path
+  // get the correct image path
   const getImgSrc = (filename) => process.env.PUBLIC_URL + "/images/" + filename;
 
   const scrollToAllRecipes = () => {
@@ -33,7 +33,7 @@ function Recipes() {
     }
   };
 
-  // ---- FILTERS ----
+  // filtering
   const filters = ["Quick", "Vegetarian", "High Protein"];
   const TAGS = {
     burger: ["Quick", "High Protein"],
@@ -47,7 +47,7 @@ function Recipes() {
     <main>
       <h1>Recipes</h1>
 
-      {/* Featured section */}
+      {/* featured recipe section */}
       <section className="highlight">
         <h2>
           CHICKEN PARM <span className="subtitle">Recipe of the Week</span>
